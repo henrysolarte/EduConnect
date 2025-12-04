@@ -8,6 +8,10 @@ const mysql = require('mysql2/promise');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Validar configuración crítica
+const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h';
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -116,8 +120,7 @@ app.post('/api/register', async (req, res) => {
     }
 
     // Hashear la contraseña
-    const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(password, salt);
+    const passwordHash = await bcrypt.hash(password, 10);
 
     // Insertar usuario con rol_id = 2 (estudiante)
     const result = await query(
@@ -192,8 +195,8 @@ app.post('/api/login', async (req, res) => {
         email: user.email, 
         rol_id: user.rol_id 
       },
-      process.env.JWT_SECRET || 'educonnect_secret_key',
-      { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN }
     );
 
     res.json({
@@ -229,7 +232,7 @@ function authenticateToken(req, res, next) {
     });
   }
 
-  jwt.verify(token, process.env.JWT_SECRET || 'educonnect_secret_key', (err, user) => {
+  jwt.verify(token, JWT_SECRET, (err, user) => {
     if (err) {
       return res.status(403).json({
         success: false,
@@ -310,6 +313,13 @@ app.get('/api/admin/users', authenticateToken, requireAdmin, async (req, res) =>
 
 // Iniciar servidor
 async function startServer() {
+  // Validar JWT_SECRET antes de iniciar
+  if (!JWT_SECRET) {
+    console.error('❌ ERROR: JWT_SECRET no está configurado');
+    console.error('ℹ️  Copia .env.example a .env y configura JWT_SECRET');
+    process.exit(1);
+  }
+  
   await initializeDatabase();
   
   app.listen(PORT, () => {

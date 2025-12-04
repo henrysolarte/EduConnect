@@ -34,15 +34,16 @@ CREATE TABLE IF NOT EXISTS usuarios (
 CREATE INDEX IF NOT EXISTS idx_usuarios_email ON usuarios(email);
 
 -- =============================================
--- Usuario administrador de ejemplo
--- Email: admin@educonnect.com
--- Password: Admin123
--- (Hash generado con bcrypt, rounds=10)
+-- Para crear un usuario administrador, usa el script
+-- create-admin.js que genera un hash seguro:
+--
+-- cd backend
+-- node create-admin.js
+-- 
+-- O manualmente:
+-- 1. Genera el hash con: node -e "require('bcrypt').hash('TuPassword', 10).then(console.log)"
+-- 2. Ejecuta el INSERT con tu hash generado
 -- =============================================
--- NOTA: Este hash es para desarrollo. En producción, genera tu propio hash.
-INSERT INTO usuarios (nombre, email, password_hash, rol_id) 
-VALUES ('Administrador', 'admin@educonnect.com', '$2b$10$Xq8VpPKxMBHg9zQxB7vZE.YmPKX8y5ZGVA4Z7KF8r9g9G7xJ7Qp3y', 1)
-ON DUPLICATE KEY UPDATE nombre = nombre;
 
 -- =============================================
 -- Ver estructura creada
