@@ -17,7 +17,7 @@ function Register() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     // Validar que las contraseñas coincidan
@@ -26,20 +26,31 @@ function Register() {
       return;
     }
 
-    // Preparar datos para enviar a la API
-    const datosRegistro = {
-      nombre: formData.nombre,
-      email: formData.email,
-      password: formData.password,
-      rol_id: 2  // Siempre rol 2 = Estudiante
-    };
+    try {
+      const response = await fetch('http://localhost:5000/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          nombre: formData.nombre,
+          email: formData.email,
+          password: formData.password
+        })
+      });
 
-    console.log('Datos a enviar a la BD:', datosRegistro);
-    
-    // TODO: Aquí se enviará a la API para:
-    // 1. Hashear la contraseña (bcrypt en el backend)
-    // 2. Insertar en tabla usuarios con rol_id = 2
-    // 3. Retornar confirmación o error
+      const data = await response.json();
+
+      if (data.success) {
+        alert('¡Registro exitoso! Ahora puedes iniciar sesión');
+        window.location.href = '/login';
+      } else {
+        alert(data.message || 'Error en el registro');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error al conectar con el servidor');
+    }
   };
 
   return (

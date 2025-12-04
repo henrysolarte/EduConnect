@@ -15,18 +15,45 @@ function Login() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    console.log('Datos de login:', formData);
-    
-    // TODO: Aquí se conectará con la API para:
-    // 1. Buscar usuario por email
-    // 2. Verificar password_hash con bcrypt
-    // 3. Obtener rol_id del usuario
-    // 4. Si rol_id = 1 (admin): Redirigir a panel de administración
-    // 5. Si rol_id = 2 (estudiante): Redirigir a área de estudiantes
-    // 6. Guardar sesión/token JWT
+    try {
+      const response = await fetch('http://localhost:5000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Guardar token y datos de usuario
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('usuario', JSON.stringify(data.usuario));
+
+        alert(`¡Bienvenido ${data.usuario.nombre}!`);
+
+        // Redirigir según el rol
+        if (data.usuario.rol_id === 1) {
+          // Administrador
+          window.location.href = '/admin/dashboard';
+        } else {
+          // Estudiante
+          window.location.href = '/estudiante/dashboard';
+        }
+      } else {
+        alert(data.message || 'Error al iniciar sesión');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error al conectar con el servidor');
+    }
   };
 
   return (
