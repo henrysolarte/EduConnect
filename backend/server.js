@@ -4,6 +4,7 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mysql = require('mysql2/promise');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -11,6 +12,29 @@ const PORT = process.env.PORT || 5000;
 // Validar configuración crítica
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h';
+
+// Rate limiting configuration
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: {
+    success: false,
+    message: 'Demasiadas solicitudes. Por favor, intenta de nuevo más tarde.'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const strictLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // Limit each IP to 10 requests per windowMs (for login/register)
+  message: {
+    success: false,
+    message: 'Demasiados intentos. Por favor, intenta de nuevo en 15 minutos.'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 // Middleware
 app.use(cors());
@@ -77,7 +101,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // POST /api/register - Registro de estudiantes
-app.post('/api/register', async (req, res) => {
+app.post('/api/register', strictLimiter, async (req, res) => {
   try {
     const { nombre, email, password } = req.body;
 
@@ -149,7 +173,7 @@ app.post('/api/register', async (req, res) => {
 });
 
 // POST /api/login - Inicio de sesión
-app.post('/api/login', async (req, res) => {
+app.post('/api/login', strictLimiter, async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -245,7 +269,7 @@ function authenticateToken(req, res, next) {
 }
 
 // GET /api/profile - Obtener perfil del usuario (ruta protegida)
-app.get('/api/profile', authenticateToken, async (req, res) => {
+app.get('/api/profile', authLimiter, authenticateToken, async (req, res) => {
   try {
     const users = await query(
       `SELECT u.id, u.nombre, u.email, u.rol_id, r.nombre as rol_nombre 
@@ -288,7 +312,7 @@ function requireAdmin(req, res, next) {
 }
 
 // GET /api/admin/users - Listar usuarios (solo administradores)
-app.get('/api/admin/users', authenticateToken, requireAdmin, async (req, res) => {
+app.get('/api/admin/users', authLimiter, authenticateToken, requireAdmin, async (req, res) => {
   try {
     const users = await query(
       `SELECT u.id, u.nombre, u.email, u.rol_id, r.nombre as rol_nombre 

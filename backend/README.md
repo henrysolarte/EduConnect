@@ -201,11 +201,13 @@ generateAdminHash();
 | 401 | No autorizado / Credenciales inválidas |
 | 403 | Prohibido / Sin permisos |
 | 404 | Recurso no encontrado |
+| 429 | Demasiadas solicitudes (rate limiting) |
 | 500 | Error interno del servidor |
 
 ## Seguridad
 
 - Las contraseñas se hashean con bcrypt (10 rounds)
 - Los tokens JWT expiran en 24 horas
+- Rate limiting: 10 intentos por 15 min en login/register, 100 por 15 min en otras rutas
 - CORS habilitado para desarrollo local
 - Nunca exponer el JWT_SECRET en producción
