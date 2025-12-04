@@ -1,8 +1,12 @@
 import React from 'react';
 
 function Masthead() {
+  const mastheadStyle = {
+    backgroundImage: `linear-gradient(to bottom, rgba(92, 77, 66, 0.8) 0%, rgba(92, 77, 66, 0.8) 100%), url(${process.env.PUBLIC_URL}/assets/img/bg-masthead.jpg)`
+  };
+  
   return (
-    <header className="masthead">
+    <header className="masthead" style={mastheadStyle}>
       <div className="container px-4 px-lg-5 h-100">
         <div className="row gx-4 gx-lg-5 h-100 align-items-center justify-content-center text-center">
           <div className="col-lg-8 align-self-end">

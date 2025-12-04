@@ -1,4 +1,5 @@
 import React from 'react';
+import './App.css';
 import Navbar from './components/Navbar';
 import Masthead from './components/Masthead';
 import About from './components/About';
