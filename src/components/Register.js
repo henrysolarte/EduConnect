@@ -19,8 +19,27 @@ function Register() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Registro:', formData);
-    // Aquí se conectará con la base de datos
+    
+    // Validar que las contraseñas coincidan
+    if (formData.password !== formData.confirmPassword) {
+      alert('Las contraseñas no coinciden');
+      return;
+    }
+
+    // Preparar datos para enviar a la API
+    const datosRegistro = {
+      nombre: formData.nombre,
+      email: formData.email,
+      password: formData.password,
+      rol_id: 2  // Siempre rol 2 = Estudiante
+    };
+
+    console.log('Datos a enviar a la BD:', datosRegistro);
+    
+    // TODO: Aquí se enviará a la API para:
+    // 1. Hashear la contraseña (bcrypt en el backend)
+    // 2. Insertar en tabla usuarios con rol_id = 2
+    // 3. Retornar confirmación o error
   };
 
   return (
