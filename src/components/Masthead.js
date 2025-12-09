@@ -1,7 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 function Masthead() {
+  const [usuario, setUsuario] = useState(null);
+
+  useEffect(() => {
+    const usuarioGuardado = localStorage.getItem('usuario');
+    if (usuarioGuardado) {
+      setUsuario(JSON.parse(usuarioGuardado));
+    }
+  }, []);
+
   const mastheadStyle = {
     backgroundImage: `linear-gradient(to bottom, rgba(92, 77, 66, 0.8) 0%, rgba(92, 77, 66, 0.8) 100%), url(${process.env.PUBLIC_URL}/assets/img/bg-masthead.jpg)`
   };
@@ -16,7 +25,9 @@ function Masthead() {
           </div>
           <div className="col-lg-8 align-self-baseline">
             <p className="text-white-75 mb-5">Plataforma educativa para conectar estudiantes y profesores. ¡Únete hoy y comienza tu experiencia de aprendizaje!</p>
-            <Link className="btn btn-primary btn-xl" to="/register">Registrate</Link>
+            {!usuario && (
+              <Link className="btn btn-primary btn-xl" to="/register">Registrate</Link>
+            )}
           </div>
         </div>
       </div>

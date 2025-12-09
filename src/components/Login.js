@@ -39,14 +39,8 @@ function Login() {
 
         alert(`¡Bienvenido ${data.usuario.nombre}!`);
 
-        // Redirigir según el rol
-        if (data.usuario.rol_id === 1) {
-          // Administrador
-          window.location.href = '/admin/dashboard';
-        } else {
-          // Estudiante
-          window.location.href = '/estudiante/dashboard';
-        }
+        // Redirigir al inicio
+        window.location.href = '/';
       } else {
         alert(data.message || 'Error al iniciar sesión');
       }

@@ -7,7 +7,8 @@ function Register() {
     nombre: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    rol_id: '2' // Por defecto Estudiante
   });
 
   const handleChange = (e) => {
@@ -20,6 +21,8 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    console.log('Formulario enviado:', formData);
+    
     // Validar que las contraseñas coincidan
     if (formData.password !== formData.confirmPassword) {
       alert('Las contraseñas no coinciden');
@@ -27,6 +30,7 @@ function Register() {
     }
 
     try {
+      console.log('Enviando a API...');
       const response = await fetch('http://localhost:5000/api/register', {
         method: 'POST',
         headers: {
@@ -35,11 +39,14 @@ function Register() {
         body: JSON.stringify({
           nombre: formData.nombre,
           email: formData.email,
-          password: formData.password
+          password: formData.password,
+          rol_id: parseInt(formData.rol_id)
         })
       });
 
+      console.log('Response status:', response.status);
       const data = await response.json();
+      console.log('Response data:', data);
 
       if (data.success) {
         alert('¡Registro exitoso! Ahora puedes iniciar sesión');
@@ -48,7 +55,7 @@ function Register() {
         alert(data.message || 'Error en el registro');
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error completo:', error);
       alert('Error al conectar con el servidor');
     }
   };
@@ -80,8 +87,24 @@ function Register() {
               className="form-control"
               value={formData.email}
               onChange={handleChange}
+              autoComplete="email"
               required
             />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="rol_id">Tipo de Usuario</label>
+            <select
+              id="rol_id"
+              name="rol_id"
+              className="form-control"
+              value={formData.rol_id}
+              onChange={handleChange}
+              required
+            >
+              <option value="2">Estudiante</option>
+              <option value="3">Profesor</option>
+            </select>
           </div>
 
           <div className="form-group">
@@ -93,6 +116,7 @@ function Register() {
               className="form-control"
               value={formData.password}
               onChange={handleChange}
+              autoComplete="new-password"
               required
             />
           </div>
@@ -106,6 +130,7 @@ function Register() {
               className="form-control"
               value={formData.confirmPassword}
               onChange={handleChange}
+              autoComplete="new-password"
               required
             />
           </div>

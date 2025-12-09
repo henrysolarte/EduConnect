@@ -6,9 +6,9 @@ function About() {
       <div className="container px-4 px-lg-5">
         <div className="row gx-4 gx-lg-5 justify-content-center">
           <div className="col-lg-8 text-center">
-            <h2 className="text-white mt-0">We've got what you need!</h2>
+            <h2 className="text-white mt-0">La investigación del mañana, hoy</h2>
             <hr className="divider divider-light" />
-            <p className="text-white-75 mb-4">Start Bootstrap has everything you need to get your new website up and running in no time! Choose one of our open source, free to download, and easy to use themes! No strings attached!</p>
+            <p className="text-white-75 mb-4">La misión de EduConnect es compartir rápidamente preprints y otras investigaciones en fase inicial, empoderando a investigadores de todo el mundo para contribuir a un futuro mejor. Nuestra plataforma de investigación abierta apoya la resolución de problemas complejos mediante la conexión de académicos a nivel global, abarcando una amplia diversidad de disciplinas académicas.</p>
             <a className="btn btn-light btn-xl" href="#services">Get Started!</a>
           </div>
         </div>

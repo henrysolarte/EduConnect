@@ -1,14 +1,30 @@
 import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Portfolio() {
+  const navigate = useNavigate();
+
   const portfolioItems = [
-    { id: 1, category: 'Category', name: 'Project Name' },
-    { id: 2, category: 'Category', name: 'Project Name' },
-    { id: 3, category: 'Category', name: 'Project Name' },
-    { id: 4, category: 'Category', name: 'Project Name' },
-    { id: 5, category: 'Category', name: 'Project Name' },
-    { id: 6, category: 'Category', name: 'Project Name' }
+    { id: 1, category: '', name: '' },
+    { id: 2, category: '', name: '' },
+    { id: 3, category: '', name: '' },
+    { id: 4, category: '', name: '' },
+    { id: 5, category: '', name: '' },
+    { id: 6, category: '', name: '' }
   ];
+
+  const handleClick = (e, itemId) => {
+    if (itemId === 1) {
+      e.preventDefault();
+      // Verificar si hay token de autenticación
+      const token = localStorage.getItem('token');
+      if (token) {
+        navigate('/js');
+      } else {
+        navigate('/register');
+      }
+    }
+  };
 
   return (
     <div id="portfolio">
@@ -16,7 +32,12 @@ function Portfolio() {
         <div className="row g-0">
           {portfolioItems.map(item => (
             <div key={item.id} className="col-lg-4 col-sm-6">
-              <a className="portfolio-box" href={`assets/img/portfolio/fullsize/${item.id}.jpg`} title={item.name}>
+              <a 
+                className="portfolio-box" 
+                href={`assets/img/portfolio/fullsize/${item.id}.jpg`} 
+                title={item.name}
+                onClick={(e) => handleClick(e, item.id)}
+              >
                 <img className="img-fluid" src={`assets/img/portfolio/thumbnails/${item.id}.jpg`} alt="..." />
                 <div className="portfolio-box-caption">
                   <div className="project-category text-white-50">{item.category}</div>
