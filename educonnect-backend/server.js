@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const authRoutes = require('./routes/auth');
+const publicacionesRoutes = require('./routes/publicaciones');
 
 const app = express();
 const PORT = 5000;
@@ -11,6 +12,7 @@ app.use(express.json());
 
 // Rutas
 app.use('/api', authRoutes);
+app.use('/api/publicaciones', publicacionesRoutes);
 
 // Ruta de prueba
 app.get('/', (req, res) => {
