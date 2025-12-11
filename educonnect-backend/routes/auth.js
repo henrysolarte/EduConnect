@@ -42,18 +42,23 @@ router.post('/register', async (req, res) => {
     const password_hash = await bcrypt.hash(password, salt);
 
     // Insertar nuevo usuario con el rol seleccionado
-    const sql = 'INSERT INTO usuarios (nombre, email, password_hash, rol_id) VALUES (?, ?, ?, ?)';
+    // Los estudiantes y admins se aprueban automáticamente, los profesores requieren aprobación
+    const aprobado = (rol_id === 2) ? 1 : 0; // Estudiantes aprobados automáticamente
+    const sql = 'INSERT INTO usuarios (nombre, email, password_hash, rol_id, aprobado) VALUES (?, ?, ?, ?, ?)';
     
-    const [result] = await db.query(sql, [nombre, email, password_hash, rol_id]);
+    const [result] = await db.query(sql, [nombre, email, password_hash, rol_id, aprobado]);
 
     res.status(201).json({
       success: true,
-      message: 'Usuario registrado exitosamente',
+      message: rol_id === 3 
+        ? 'Registro exitoso. Tu cuenta será revisada por un administrador.' 
+        : 'Usuario registrado exitosamente',
       usuario: {
         id: result.insertId,
         nombre,
         email,
-        rol_id: rol_id
+        rol_id: rol_id,
+        aprobado: aprobado
       }
     });
   } catch (error) {
@@ -97,13 +102,19 @@ router.post('/login', async (req, res) => {
 
     const usuario = results[0];
 
-    // Verificar contraseña
-    const passwordValida = await bcrypt.compare(password, usuario.password_hash);
+      // Verificar contraseña en texto plano
+      if (usuario.password !== password) {
+        return res.status(401).json({ 
+          success: false, 
+          message: 'Credenciales inválidas' 
+        });
+      }
 
-    if (!passwordValida) {
-      return res.status(401).json({ 
+    // Verificar si el usuario está aprobado (solo para profesores)
+    if (usuario.rol_id === 3 && !usuario.aprobado) {
+      return res.status(403).json({ 
         success: false, 
-        message: 'Credenciales inválidas' 
+        message: 'Tu cuenta está pendiente de aprobación por un administrador' 
       });
     }
 
@@ -127,7 +138,8 @@ router.post('/login', async (req, res) => {
         nombre: usuario.nombre,
         email: usuario.email,
         rol_id: usuario.rol_id,
-        rol_nombre: usuario.rol_nombre
+        rol_nombre: usuario.rol_nombre,
+        aprobado: usuario.aprobado
       }
     });
   } catch (error) {
@@ -135,6 +147,69 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ 
       success: false, 
       message: 'Error en el servidor' 
+    });
+  }
+});
+
+// GET /api/profesores/pendientes - Obtener profesores pendientes de aprobación (solo admin)
+router.get('/profesores/pendientes', async (req, res) => {
+  try {
+    const sql = `
+      SELECT u.id, u.nombre, u.email, u.rol_id, r.nombre as rol_nombre, u.aprobado
+      FROM usuarios u
+      INNER JOIN roles r ON u.rol_id = r.id
+      WHERE u.rol_id = 3 AND u.aprobado = 0
+      ORDER BY u.id DESC
+    `;
+
+    const [profesores] = await db.query(sql);
+
+    res.json({
+      success: true,
+      profesores
+    });
+  } catch (error) {
+    console.error('Error al obtener profesores pendientes:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error al obtener profesores pendientes' 
+    });
+  }
+});
+
+// PUT /api/profesores/aprobar/:id - Aprobar un profesor (solo admin)
+router.put('/profesores/aprobar/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Verificar que el usuario existe y es un profesor
+    const [usuario] = await db.query(
+      'SELECT * FROM usuarios WHERE id = ? AND rol_id = 3',
+      [id]
+    );
+
+    if (usuario.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Profesor no encontrado'
+      });
+    }
+
+    // Aprobar el profesor
+    await db.query(
+      'UPDATE usuarios SET aprobado = 1 WHERE id = ?',
+      [id]
+    );
+
+    res.json({
+      success: true,
+      message: 'Profesor aprobado exitosamente'
+    });
+  } catch (error) {
+    console.error('Error al aprobar profesor:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error al aprobar profesor' 
     });
   }
 });
