@@ -134,11 +134,13 @@ router.get('/tipo/:tipo_id', async (req, res) => {
         p.titulo,
         p.autor_principal,
         p.institucion,
+        p.pais,
         p.area_conocimiento,
         p.resumen,
         p.palabras_clave,
         p.fecha_subida,
         p.estado,
+        p.archivo_nombre,
         t.nombre as tipo_documento
       FROM publicaciones p
       JOIN tipos_documento t ON p.tipo_id = t.id
@@ -267,6 +269,79 @@ router.get('/tipos', async (req, res) => {
     res.status(500).json({ 
       success: false, 
       message: 'Error al obtener los tipos de documento' 
+    });
+  }
+});
+
+// GET - Obtener publicaciones pendientes de aprobación
+router.get('/pendientes', async (req, res) => {
+  try {
+    const query = `
+      SELECT 
+        p.id,
+        p.titulo,
+        p.autor_principal,
+        p.correo_contacto,
+        p.institucion,
+        p.pais,
+        p.area_conocimiento,
+        p.resumen,
+        p.palabras_clave,
+        p.fecha_subida,
+        p.estado,
+        t.nombre as tipo_documento
+      FROM publicaciones p
+      JOIN tipos_documento t ON p.tipo_id = t.id
+      WHERE p.estado = 'en_revision'
+      ORDER BY p.fecha_subida ASC
+    `;
+
+    const [publicaciones] = await db.query(query);
+
+    res.json({
+      success: true,
+      publicaciones
+    });
+
+  } catch (error) {
+    console.error('Error al obtener publicaciones pendientes:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error al obtener las publicaciones pendientes' 
+    });
+  }
+});
+
+// PUT - Aprobar una publicación
+router.put('/aprobar/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const query = `
+      UPDATE publicaciones 
+      SET estado = 'aprobado' 
+      WHERE id = ?
+    `;
+
+    const [result] = await db.query(query, [id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Publicación no encontrada'
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Publicación aprobada exitosamente'
+    });
+
+  } catch (error) {
+    console.error('Error al aprobar publicación:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error al aprobar la publicación' 
     });
   }
 });
