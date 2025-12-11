@@ -37,16 +37,11 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    // Hashear contraseña
-    const salt = await bcrypt.genSalt(10);
-    const password_hash = await bcrypt.hash(password, salt);
-
     // Insertar nuevo usuario con el rol seleccionado
     // Los estudiantes y admins se aprueban automáticamente, los profesores requieren aprobación
     const aprobado = (rol_id === 2) ? 1 : 0; // Estudiantes aprobados automáticamente
-    const sql = 'INSERT INTO usuarios (nombre, email, password_hash, rol_id, aprobado) VALUES (?, ?, ?, ?, ?)';
-    
-    const [result] = await db.query(sql, [nombre, email, password_hash, rol_id, aprobado]);
+    const sql = 'INSERT INTO usuarios (nombre, email, password, rol_id, aprobado) VALUES (?, ?, ?, ?, ?)';
+    const [result] = await db.query(sql, [nombre, email, password, rol_id, aprobado]);
 
     res.status(201).json({
       success: true,
