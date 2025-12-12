@@ -1,4 +1,4 @@
-export default function JSCourse() {
+export default function PythonCourse() {
   const mastheadStyle = {
     minHeight: '100vh',
     backgroundImage: `linear-gradient(to bottom, rgba(92, 77, 66, 0.8) 0%, rgba(92, 77, 66, 0.8) 100%), url(${process.env.PUBLIC_URL}/assets/img/bg-masthead.jpg)`,
@@ -14,22 +14,28 @@ export default function JSCourse() {
   return (
     <div style={mastheadStyle}>
       <div style={{ maxWidth: 700, width: '100%', margin: '0 auto', background: 'rgba(255,255,255,0.97)', borderRadius: 16, boxShadow: '0 8px 32px rgba(0,0,0,0.18)', padding: '2.5rem 2rem', textAlign: 'center' }}>
-        <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#2c3e50', marginBottom: 16 }}>Curso de JavaScript Desde Cero</h1>
+        <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#2c3e50', marginBottom: 16 }}>🐍 Curso: Python Desde Cero</h1>
         <p style={{ fontSize: '1.15rem', color: '#555', marginBottom: 32 }}>
-          Domina el lenguaje más utilizado en la web con un enfoque práctico, moderno y orientado a proyectos.
+          Aprende Python desde cero con ejemplos simples y ejercicios prácticos. Ideal para quienes quieren iniciar en la programación, automatizar tareas o dar sus primeros pasos en análisis de datos.
         </p>
         <div style={{ textAlign: 'left', marginBottom: 32 }}>
-          <h2 style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: 10 }}>Descripción del Curso</h2>
-          <p style={{ marginBottom: 18 }}>
-            Aprende JavaScript desde los fundamentos hasta un nivel intermedio. Explorarás variables, funciones, arreglos, objetos, DOM, eventos y programación asíncrona, todo acompañado de ejercicios guiados y un proyecto final que podrás incluir en tu portafolio profesional.
-          </p>
-          <h2 style={{ fontSize: '1.4rem', fontWeight: 600, margin: '24px 0 10px' }}>¿Qué Aprenderás?</h2>
-          <ul style={{ marginLeft: 18, marginBottom: 0, color: '#333', fontSize: '1rem' }}>
-            <li>Fundamentos de programación con JavaScript</li>
-            <li>Funciones, arreglos y objetos</li>
-            <li>Manipulación del DOM y manejo de eventos</li>
-            <li>Uso de Promesas, Async/Await y consumo de APIs</li>
-            <li>Construcción de una aplicación web desde cero</li>
+          <h2 style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: 10 }}>¿Qué aprenderás?</h2>
+          <ul style={{ marginLeft: 18, marginBottom: 18, color: '#333', fontSize: '1rem' }}>
+            <li>Sintaxis básica de Python</li>
+            <li>Variables, tipos de datos y operadores</li>
+            <li>Condicionales y ciclos (if, for, while)</li>
+            <li>Funciones y manejo de errores</li>
+            <li>Listas, diccionarios y manejo de archivos</li>
+            <li>Mini–proyecto final aplicando todo lo aprendido</li>
+          </ul>
+          <h2 style={{ fontSize: '1.4rem', fontWeight: 600, margin: '24px 0 10px' }}>Estructura del curso (módulos)</h2>
+          <ul style={{ marginLeft: 18, color: '#333', fontSize: '1rem' }}>
+            <li>Introducción a Python – Instalación y tu primer programa.</li>
+            <li>Fundamentos – Variables, tipos y operadores.</li>
+            <li>Control de flujo – Condicionales y bucles.</li>
+            <li>Funciones – Reutilización de código.</li>
+            <li>Estructuras de datos – Listas, tuplas, diccionarios.</li>
+            <li>Archivos y práctica – Leer/escribir archivos y mini–proyecto.</li>
           </ul>
         </div>
         <div style={{ background: '#f8f9fa', borderRadius: 12, boxShadow: '0 2px 8px rgba(44,62,80,0.07)', padding: '2rem 1.5rem', marginBottom: 24 }}>
@@ -48,15 +54,14 @@ export default function JSCourse() {
             onClick={() => {
               // Agregar curso al carrito en localStorage
               const curso = {
-                id: 'js',
-                nombre: 'Curso de JavaScript Desde Cero',
+                id: 'python',
+                nombre: 'Curso de Python Desde Cero',
                 precio: 29.99
               };
               let carrito = [];
               try {
                 carrito = JSON.parse(localStorage.getItem('carrito')) || [];
               } catch (e) { carrito = []; }
-              // Evitar duplicados
               if (!carrito.some(item => item.id === curso.id)) {
                 carrito.push(curso);
                 localStorage.setItem('carrito', JSON.stringify(carrito));

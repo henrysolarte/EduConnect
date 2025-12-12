@@ -14,15 +14,35 @@ function Portfolio() {
   ];
 
   const handleClick = (e, itemId) => {
-    if (itemId === 1) {
-      e.preventDefault();
-      // Verificar si hay token de autenticación
-      const token = localStorage.getItem('token');
-      if (token) {
+    e.preventDefault();
+    // Verificar si hay token de autenticación
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('Debe estar registrado para ver la información');
+      return;
+    }
+    // Aquí podrías navegar según el curso seleccionado
+    switch (itemId) {
+      case 1:
         navigate('/js');
-      } else {
-        navigate('/register');
-      }
+        break;
+      case 2:
+        navigate('/python');
+        break;
+      case 3:
+        navigate('/cursos-cpp');
+        break;
+      case 4:
+        navigate('/java');
+        break;
+      case 5:
+        navigate('/angular');
+        break;
+      case 6:
+        navigate('/html5');
+        break;
+      default:
+        break;
     }
   };
 
@@ -49,12 +69,6 @@ function Portfolio() {
         </div>
       </div>
 
-      <section className="page-section bg-dark text-white">
-        <div className="container px-4 px-lg-5 text-center">
-          <h2 className="mb-4">Free Download at Start Bootstrap!</h2>
-          <a className="btn btn-light btn-xl" href="https://startbootstrap.com/theme/creative/">Download Now!</a>
-        </div>
-      </section>
     </div>
   );
 }

@@ -40,7 +40,7 @@ function Tesis() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!formData.autorizacionPublicacion || !formData.declaracionOriginalidad) {
@@ -48,26 +48,44 @@ function Tesis() {
       return;
     }
 
-    console.log('Datos de la tesis:', formData);
-    alert('¡Tesis registrada exitosamente! Será revisada por nuestro comité académico.');
-    
-    // Resetear formulario
-    setFormData({
-      titulo: '',
-      nivelAcademico: '',
-      areaConocimiento: '',
-      autor: '',
-      email: '',
-      universidad: '',
-      programaAcademico: '',
-      directorTesis: '',
-      anioPresentacion: '',
-      resumen: '',
-      palabrasClave: '',
-      archivo: null,
-      autorizacionPublicacion: false,
-      declaracionOriginalidad: false
-    });
+    if (!formData.archivo) {
+      alert('Debe seleccionar un archivo');
+      return;
+    }
+
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('usuario_id', usuario.id);
+      formDataToSend.append('tipo_id', 3); // 3 = Tesis
+      formDataToSend.append('titulo', formData.titulo);
+      formDataToSend.append('autor_principal', formData.autor);
+      formDataToSend.append('correo_contacto', formData.email);
+      formDataToSend.append('institucion', formData.universidad);
+      formDataToSend.append('pais', '');
+      formDataToSend.append('area_conocimiento', formData.areaConocimiento);
+      formDataToSend.append('resumen', formData.resumen);
+      formDataToSend.append('palabras_clave', formData.palabrasClave);
+      formDataToSend.append('archivo', formData.archivo);
+
+      const response = await fetch('http://localhost:5000/api/publicaciones/crear', {
+        method: 'POST',
+        body: formDataToSend
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert('¡Tesis registrada exitosamente! Será revisada por nuestro comité académico.');
+        
+        // Redirigir a la página de inicio
+        window.location.href = '/';
+      } else {
+        alert('Error: ' + (data.message || 'No se pudo registrar la tesis'));
+      }
+    } catch (error) {
+      console.error('Error al enviar tesis:', error);
+      alert('Error al conectar con el servidor');
+    }
   };
 
   const handleGuardarBorrador = () => {

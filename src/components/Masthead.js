@@ -16,7 +16,7 @@ function Masthead() {
   };
   
   return (
-    <header className="masthead" style={mastheadStyle}>
+    <header className="masthead" id="masthead" style={mastheadStyle}>
       <div className="container px-4 px-lg-5 h-100">
         <div className="row gx-4 gx-lg-5 h-100 align-items-center justify-content-center text-center">
           <div className="col-lg-8 align-self-end">

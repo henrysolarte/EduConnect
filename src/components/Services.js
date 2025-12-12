@@ -9,11 +9,14 @@ function Services() {
   };
 
   return (
-    <section className="page-section" id="services">
+    <section className="page-section" id="cursos">
       <div className="container px-4 px-lg-5">
         <h2 className="text-center mt-0">Convocatoria de Publicación Académica
 
-</h2>
+        </h2>
+          <h2 className="text-center mt-0">Publica tus trabajos académicos y contribuye al conocimiento global
+
+          </h2>
         <hr className="divider" />
         <div className="row gx-4 gx-lg-5">
           <div className="col-lg-3 col-md-6 text-center" onClick={() => handleNavigation('/papers')} style={{cursor: 'pointer'}}>

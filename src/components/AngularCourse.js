@@ -1,4 +1,27 @@
-export default function JSCourse() {
+const angularTemario = [
+  'Qué es Angular y cómo funciona su arquitectura',
+  'Instalación del entorno (Node, Angular CLI)',
+  'Estructura de un proyecto Angular',
+  'Creación de componentes y comunicación entre ellos',
+  'Directivas, pipes y data binding',
+  'Servicios e inyección de dependencias',
+  'Consumo de APIs con HttpClient',
+  'Manejo de rutas (Routing)',
+  'Mini–proyecto final con Angular CLI',
+];
+
+const angularModulos = [
+  'Introducción a Angular – Conceptos clave y preparación del entorno.',
+  'Angular CLI y estructura del proyecto – Carpetas y ciclo de vida.',
+  'Componentes – Templates, estilos y lógica.',
+  'Data Binding y Directivas – Interacciones dinámicas.',
+  'Servicios y DI – Arquitectura modular.',
+  'Consumo de APIs – HttpClient y manejo de datos.',
+  'Routing – Navegación entre páginas.',
+  'Proyecto final – Construcción de una SPA funcional.'
+];
+
+export default function AngularCourse() {
   const mastheadStyle = {
     minHeight: '100vh',
     backgroundImage: `linear-gradient(to bottom, rgba(92, 77, 66, 0.8) 0%, rgba(92, 77, 66, 0.8) 100%), url(${process.env.PUBLIC_URL}/assets/img/bg-masthead.jpg)`,
@@ -14,23 +37,23 @@ export default function JSCourse() {
   return (
     <div style={mastheadStyle}>
       <div style={{ maxWidth: 700, width: '100%', margin: '0 auto', background: 'rgba(255,255,255,0.97)', borderRadius: 16, boxShadow: '0 8px 32px rgba(0,0,0,0.18)', padding: '2.5rem 2rem', textAlign: 'center' }}>
-        <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#2c3e50', marginBottom: 16 }}>Curso de JavaScript Desde Cero</h1>
+        <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#2c3e50', marginBottom: 16 }}>🔺 Curso: Angular Desde Cero</h1>
         <p style={{ fontSize: '1.15rem', color: '#555', marginBottom: 32 }}>
-          Domina el lenguaje más utilizado en la web con un enfoque práctico, moderno y orientado a proyectos.
+          Aprende Angular desde cero y domina uno de los frameworks más potentes para crear aplicaciones web modernas, rápidas y escalables. Este curso te llevará paso a paso desde la instalación hasta la construcción de tu primera aplicación completa usando componentes, servicios y rutas.
         </p>
         <div style={{ textAlign: 'left', marginBottom: 32 }}>
-          <h2 style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: 10 }}>Descripción del Curso</h2>
-          <p style={{ marginBottom: 18 }}>
-            Aprende JavaScript desde los fundamentos hasta un nivel intermedio. Explorarás variables, funciones, arreglos, objetos, DOM, eventos y programación asíncrona, todo acompañado de ejercicios guiados y un proyecto final que podrás incluir en tu portafolio profesional.
-          </p>
-          <h2 style={{ fontSize: '1.4rem', fontWeight: 600, margin: '24px 0 10px' }}>¿Qué Aprenderás?</h2>
+          <h2 style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: 10 }}>¿Qué aprenderás?</h2>
           <ul style={{ marginLeft: 18, marginBottom: 0, color: '#333', fontSize: '1rem' }}>
-            <li>Fundamentos de programación con JavaScript</li>
-            <li>Funciones, arreglos y objetos</li>
-            <li>Manipulación del DOM y manejo de eventos</li>
-            <li>Uso de Promesas, Async/Await y consumo de APIs</li>
-            <li>Construcción de una aplicación web desde cero</li>
+            {angularTemario.map((item, idx) => (
+              <li key={idx} style={{ marginBottom: 4 }}>{item}</li>
+            ))}
           </ul>
+          <h2 style={{ fontSize: '1.4rem', fontWeight: 600, margin: '24px 0 10px' }}>Estructura del curso (módulos)</h2>
+          <ol style={{ marginLeft: 18, color: '#333', fontSize: '1rem' }}>
+            {angularModulos.map((mod, idx) => (
+              <li key={idx} style={{ marginBottom: 4 }}>{mod}</li>
+            ))}
+          </ol>
         </div>
         <div style={{ background: '#f8f9fa', borderRadius: 12, boxShadow: '0 2px 8px rgba(44,62,80,0.07)', padding: '2rem 1.5rem', marginBottom: 24 }}>
           <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: 10, color: '#2c3e50' }}>Inscríbete Ahora</h3>
@@ -48,8 +71,8 @@ export default function JSCourse() {
             onClick={() => {
               // Agregar curso al carrito en localStorage
               const curso = {
-                id: 'js',
-                nombre: 'Curso de JavaScript Desde Cero',
+                id: 'angular',
+                nombre: 'Curso de Angular Desde Cero',
                 precio: 29.99
               };
               let carrito = [];

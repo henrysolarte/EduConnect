@@ -37,7 +37,7 @@ function Papers() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!formData.declaracion) {
@@ -45,22 +45,44 @@ function Papers() {
       return;
     }
 
-    console.log('Datos del paper:', formData);
-    alert('¡Paper enviado exitosamente! Será revisado por nuestro equipo académico.');
-    
-    // Resetear formulario
-    setFormData({
-      titulo: '',
-      autor: '',
-      email: '',
-      institucion: '',
-      pais: '',
-      area: '',
-      resumen: '',
-      palabrasClave: '',
-      archivo: null,
-      declaracion: false
-    });
+    if (!formData.archivo) {
+      alert('Debe seleccionar un archivo');
+      return;
+    }
+
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('usuario_id', usuario.id);
+      formDataToSend.append('tipo_id', 1); // 1 = Paper
+      formDataToSend.append('titulo', formData.titulo);
+      formDataToSend.append('autor_principal', formData.autor);
+      formDataToSend.append('correo_contacto', formData.email);
+      formDataToSend.append('institucion', formData.institucion);
+      formDataToSend.append('pais', formData.pais);
+      formDataToSend.append('area_conocimiento', formData.area);
+      formDataToSend.append('resumen', formData.resumen);
+      formDataToSend.append('palabras_clave', formData.palabrasClave);
+      formDataToSend.append('archivo', formData.archivo);
+
+      const response = await fetch('http://localhost:5000/api/publicaciones/crear', {
+        method: 'POST',
+        body: formDataToSend
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert('¡Paper enviado exitosamente! Será revisado por nuestro equipo académico.');
+        
+        // Redirigir a la página de inicio
+        window.location.href = '/';
+      } else {
+        alert('Error: ' + (data.message || 'No se pudo enviar el paper'));
+      }
+    } catch (error) {
+      console.error('Error al enviar paper:', error);
+      alert('Error al conectar con el servidor');
+    }
   };
 
   if (!usuario) {

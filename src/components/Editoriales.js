@@ -39,7 +39,7 @@ function Editoriales() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!formData.declaracionOriginalidad || !formData.autorizacionEdicion) {
@@ -47,25 +47,44 @@ function Editoriales() {
       return;
     }
 
-    console.log('Datos del editorial:', formData);
-    alert('¡Editorial registrado exitosamente! Será revisado por nuestro equipo editorial.');
-    
-    // Resetear formulario
-    setFormData({
-      titulo: '',
-      tipoEditorial: '',
-      temaGeneral: '',
-      autor: '',
-      email: '',
-      institucion: '',
-      fecha: '',
-      sintesis: '',
-      palabrasClave: '',
-      publicoObjetivo: '',
-      archivo: null,
-      declaracionOriginalidad: false,
-      autorizacionEdicion: false
-    });
+    if (!formData.archivo) {
+      alert('Debe seleccionar un archivo');
+      return;
+    }
+
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('usuario_id', usuario.id);
+      formDataToSend.append('tipo_id', 4); // 4 = Editorial
+      formDataToSend.append('titulo', formData.titulo);
+      formDataToSend.append('autor_principal', formData.autor);
+      formDataToSend.append('correo_contacto', formData.email);
+      formDataToSend.append('institucion', formData.institucion);
+      formDataToSend.append('pais', '');
+      formDataToSend.append('area_conocimiento', formData.temaGeneral);
+      formDataToSend.append('resumen', formData.sintesis);
+      formDataToSend.append('palabras_clave', formData.palabrasClave);
+      formDataToSend.append('archivo', formData.archivo);
+
+      const response = await fetch('http://localhost:5000/api/publicaciones/crear', {
+        method: 'POST',
+        body: formDataToSend
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert('¡Editorial registrado exitosamente! Será revisado por nuestro equipo editorial.');
+        
+        // Redirigir a la página de inicio
+        window.location.href = '/';
+      } else {
+        alert('Error: ' + (data.message || 'No se pudo registrar el editorial'));
+      }
+    } catch (error) {
+      console.error('Error al enviar editorial:', error);
+      alert('Error al conectar con el servidor');
+    }
   };
 
   const handleGuardarBorrador = () => {

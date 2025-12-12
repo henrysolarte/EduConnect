@@ -36,11 +36,11 @@ function ArticulosCientificos() {
     const { name, value, type, checked, files } = e.target;
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : type === 'file' ? files : value
+      [name]: type === 'checkbox' ? checked : type === 'file' ? files[0] : value
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!formData.declaracionOriginalidad || !formData.declaracionEtica) {
@@ -48,26 +48,44 @@ function ArticulosCientificos() {
       return;
     }
 
-    console.log('Datos del artículo científico:', formData);
-    alert('¡Artículo enviado exitosamente! Será revisado por nuestro comité científico.');
-    
-    // Resetear formulario
-    setFormData({
-      titulo: '',
-      tipoDocumento: '',
-      areaConocimiento: '',
-      autorPrincipal: '',
-      email: '',
-      institucion: '',
-      pais: '',
-      resumen: '',
-      palabrasClave: '',
-      coautores: '',
-      archivo: null,
-      materialComplementario: null,
-      declaracionOriginalidad: false,
-      declaracionEtica: false
-    });
+    if (!formData.archivo) {
+      alert('Debe seleccionar un archivo');
+      return;
+    }
+
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('usuario_id', usuario.id);
+      formDataToSend.append('tipo_id', 2); // 2 = Artículo científico
+      formDataToSend.append('titulo', formData.titulo);
+      formDataToSend.append('autor_principal', formData.autorPrincipal);
+      formDataToSend.append('correo_contacto', formData.email);
+      formDataToSend.append('institucion', formData.institucion);
+      formDataToSend.append('pais', formData.pais);
+      formDataToSend.append('area_conocimiento', formData.areaConocimiento);
+      formDataToSend.append('resumen', formData.resumen);
+      formDataToSend.append('palabras_clave', formData.palabrasClave);
+      formDataToSend.append('archivo', formData.archivo);
+
+      const response = await fetch('http://localhost:5000/api/publicaciones/crear', {
+        method: 'POST',
+        body: formDataToSend
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert('¡Artículo enviado exitosamente! Será revisado por nuestro comité científico.');
+        
+        // Redirigir a la página de inicio
+        window.location.href = '/';
+      } else {
+        alert('Error: ' + (data.message || 'No se pudo enviar el artículo'));
+      }
+    } catch (error) {
+      console.error('Error al enviar artículo:', error);
+      alert('Error al conectar con el servidor');
+    }
   };
 
   const handleGuardarBorrador = () => {

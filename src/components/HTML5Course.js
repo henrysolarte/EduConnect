@@ -1,4 +1,23 @@
-export default function JSCourse() {
+const html5Temario = [
+  'Qué es HTML5 y cómo funciona en la web',
+  'Estructura básica de una página (<!DOCTYPE html>, <html>, <head>, <body>)',
+  'Etiquetas de texto: títulos, párrafos, listas',
+  'Imágenes, enlaces y tablas',
+  'Formularios básicos (inputs, botones, selects)',
+  'Etiquetas semánticas: <header>, <nav>, <section>, <article>, <footer>',
+  'Buenas prácticas de estructura y accesibilidad básica',
+];
+
+const html5Modulos = [
+  'Introducción a HTML5 – Conceptos básicos y primer documento.',
+  'Texto y contenido – Títulos, párrafos, listas y enlaces.',
+  'Multimedia – Imágenes, audio y video.',
+  'Estructura semántica – Secciones y organización del contenido.',
+  'Formularios – Campos, botones y envío de datos.',
+  'Proyecto final – Maquetación de una página web completa.'
+];
+
+export default function HTML5Course() {
   const mastheadStyle = {
     minHeight: '100vh',
     backgroundImage: `linear-gradient(to bottom, rgba(92, 77, 66, 0.8) 0%, rgba(92, 77, 66, 0.8) 100%), url(${process.env.PUBLIC_URL}/assets/img/bg-masthead.jpg)`,
@@ -14,23 +33,23 @@ export default function JSCourse() {
   return (
     <div style={mastheadStyle}>
       <div style={{ maxWidth: 700, width: '100%', margin: '0 auto', background: 'rgba(255,255,255,0.97)', borderRadius: 16, boxShadow: '0 8px 32px rgba(0,0,0,0.18)', padding: '2.5rem 2rem', textAlign: 'center' }}>
-        <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#2c3e50', marginBottom: 16 }}>Curso de JavaScript Desde Cero</h1>
+        <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#2c3e50', marginBottom: 16 }}>🌐 Curso: HTML5 Desde Cero</h1>
         <p style={{ fontSize: '1.15rem', color: '#555', marginBottom: 32 }}>
-          Domina el lenguaje más utilizado en la web con un enfoque práctico, moderno y orientado a proyectos.
+          Aprende HTML5 desde cero y construye la estructura de tus primeras páginas web. Este curso te enseña las etiquetas esenciales, la organización del contenido y las buenas prácticas para crear sitios modernos, ordenados y listos para trabajar con CSS y JavaScript.
         </p>
         <div style={{ textAlign: 'left', marginBottom: 32 }}>
-          <h2 style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: 10 }}>Descripción del Curso</h2>
-          <p style={{ marginBottom: 18 }}>
-            Aprende JavaScript desde los fundamentos hasta un nivel intermedio. Explorarás variables, funciones, arreglos, objetos, DOM, eventos y programación asíncrona, todo acompañado de ejercicios guiados y un proyecto final que podrás incluir en tu portafolio profesional.
-          </p>
-          <h2 style={{ fontSize: '1.4rem', fontWeight: 600, margin: '24px 0 10px' }}>¿Qué Aprenderás?</h2>
+          <h2 style={{ fontSize: '1.4rem', fontWeight: 600, marginBottom: 10 }}>¿Qué aprenderás?</h2>
           <ul style={{ marginLeft: 18, marginBottom: 0, color: '#333', fontSize: '1rem' }}>
-            <li>Fundamentos de programación con JavaScript</li>
-            <li>Funciones, arreglos y objetos</li>
-            <li>Manipulación del DOM y manejo de eventos</li>
-            <li>Uso de Promesas, Async/Await y consumo de APIs</li>
-            <li>Construcción de una aplicación web desde cero</li>
+            {html5Temario.map((item, idx) => (
+              <li key={idx} style={{ marginBottom: 4 }}>{item}</li>
+            ))}
           </ul>
+          <h2 style={{ fontSize: '1.4rem', fontWeight: 600, margin: '24px 0 10px' }}>Estructura del curso (módulos)</h2>
+          <ol style={{ marginLeft: 18, color: '#333', fontSize: '1rem' }}>
+            {html5Modulos.map((mod, idx) => (
+              <li key={idx} style={{ marginBottom: 4 }}>{mod}</li>
+            ))}
+          </ol>
         </div>
         <div style={{ background: '#f8f9fa', borderRadius: 12, boxShadow: '0 2px 8px rgba(44,62,80,0.07)', padding: '2rem 1.5rem', marginBottom: 24 }}>
           <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: 10, color: '#2c3e50' }}>Inscríbete Ahora</h3>
@@ -48,8 +67,8 @@ export default function JSCourse() {
             onClick={() => {
               // Agregar curso al carrito en localStorage
               const curso = {
-                id: 'js',
-                nombre: 'Curso de JavaScript Desde Cero',
+                id: 'html5',
+                nombre: 'Curso de HTML5 Desde Cero',
                 precio: 29.99
               };
               let carrito = [];
