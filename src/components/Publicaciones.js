@@ -228,73 +228,76 @@ function Publicaciones() {
     );
   }
 
-  return (
-    <div style={{ 
-      padding: '100px 20px 50px', 
+    // Fondo igual a JSCourse.js
+    const publicacionesBgStyle = {
       minHeight: '100vh',
-      backgroundColor: '#f8f9fa'
-    }}>
-      <div className="container">
-        {/* Encabezado */}
-        <div className="text-center mb-5">
-          <h1 style={{ 
-            fontSize: '2.5rem', 
-            fontWeight: 'bold', 
-            color: '#2c3e50',
-            marginBottom: '1rem'
-          }}>
-            Publicaciones Académicas
-          </h1>
-          <p style={{ fontSize: '1.1rem', color: '#7f8c8d', maxWidth: '700px', margin: '0 auto' }}>
-            Explora nuestra colección de trabajos académicos y científicos
-          </p>
-        </div>
+      backgroundImage: `linear-gradient(to bottom, rgba(92, 77, 66, 0.8) 0%, rgba(92, 77, 66, 0.8) 100%), url(${process.env.PUBLIC_URL}/assets/img/bg-masthead.jpg)`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexDirection: 'column',
+      padding: 0,
+      width: '100%',
+    };
 
-        {/* Papers */}
-        <SeccionPublicaciones 
-          titulo="Papers" 
-          publicaciones={publicaciones.papers}
-          color="#e74c3c"
-          tipo="paper"
-        />
-
-        {/* Artículos Científicos */}
-        <SeccionPublicaciones 
-          titulo="Artículos Científicos" 
-          publicaciones={publicaciones.articulos}
-          color="#3498db"
-          tipo="articulo"
-        />
-
-        {/* Tesis */}
-        <SeccionPublicaciones 
-          titulo="Tesis" 
-          publicaciones={publicaciones.tesis}
-          color="#9b59b6"
-          tipo="tesis"
-        />
-
-        {/* Editoriales */}
-        <SeccionPublicaciones 
-          titulo="Editoriales" 
-          publicaciones={publicaciones.editoriales}
-          color="#27ae60"
-          tipo="editorial"
-        />
-
-        {/* Botón Salir */}
-        <div className="text-center mt-5">
-          <a
-            className="btn btn-secondary"
-            style={{ fontSize: '1.1rem', padding: '10px 30px', fontWeight: 'bold' }}
-            href="/#masthead"
-          >
-            Salir
-          </a>
+    return (
+      <div style={publicacionesBgStyle}>
+        <div style={{ maxWidth: 900, width: '100%', margin: '0 auto', background: 'rgba(255,255,255,0.97)', borderRadius: 16, boxShadow: '0 8px 32px rgba(0,0,0,0.18)', padding: '2.5rem 2rem', textAlign: 'center' }}>
+          {/* Encabezado */}
+          <div className="text-center mb-5">
+            <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#2c3e50', marginBottom: '1rem' }}>
+              Publicaciones Académicas
+            </h1>
+            <p style={{ fontSize: '1.1rem', color: '#7f8c8d', maxWidth: '700px', margin: '0 auto' }}>
+              Explora nuestra colección de trabajos académicos y científicos
+            </p>
+          </div>
+          {/* Papers */}
+          <SeccionPublicaciones 
+            titulo="Papers" 
+            publicaciones={publicaciones.papers}
+            color="#3498db"
+            tipo="paper"
+          />
+          {/* Artículos Científicos */}
+          <SeccionPublicaciones 
+            titulo="Artículos Científicos" 
+            publicaciones={publicaciones.articulos}
+            color="#3498db"
+            tipo="articulo"
+          />
+          {/* Tesis */}
+          <SeccionPublicaciones 
+            titulo="Tesis" 
+            publicaciones={publicaciones.tesis}
+            color="#3498db"
+            tipo="tesis"
+          />
+          {/* Editoriales */}
+          <SeccionPublicaciones 
+            titulo="Editoriales" 
+            publicaciones={publicaciones.editoriales}
+            color="#3498db"
+            tipo="editorial"
+          />
+          {/* Botón Salir */}
+          <div className="text-center mt-5">
+            <a
+              className="btn btn-secondary"
+              style={{ fontSize: '1.1rem', padding: '10px 30px', fontWeight: 'bold', borderRadius: 8 }}
+              href="/#masthead"
+            >
+              Salir
+            </a>
+          </div>
+          <footer style={{ textAlign: 'center', color: '#888', fontSize: '0.95rem', marginTop: 32 }}>
+            © {new Date().getFullYear()} EduConnect – Todos los derechos reservados.
+          </footer>
         </div>
       </div>
-    </div>
-  );
+    );
 }
 
 export default Publicaciones;

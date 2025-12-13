@@ -15,88 +15,84 @@ function Contact() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const [sending, setSending] = useState(false);
+  const [feedback, setFeedback] = useState(null);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    alert('Message sent successfully!');
-    setFormData({ name: '', email: '', phone: '', message: '' });
+    setSending(true);
+    setFeedback(null);
+    try {
+      const res = await fetch('http://localhost:5000/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setFeedback({ type: 'success', message: '¡Mensaje enviado correctamente!' });
+        setFormData({ name: '', email: '', phone: '', message: '' });
+      } else {
+        setFeedback({ type: 'error', message: data.error || 'No se pudo enviar el mensaje.' });
+      }
+    } catch (err) {
+      setFeedback({ type: 'error', message: 'Error de red. Intenta más tarde.' });
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const mastheadStyle = {
+    minHeight: '100vh',
+    backgroundImage: `linear-gradient(to bottom, rgba(92, 77, 66, 0.8) 0%, rgba(92, 77, 66, 0.8) 100%), url(${process.env.PUBLIC_URL}/assets/img/bg-masthead.jpg)`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    padding: '0',
   };
 
   return (
-    <section className="page-section" id="contact">
-      <div className="container px-4 px-lg-5">
-        <div className="row gx-4 gx-lg-5 justify-content-center">
-          <div className="col-lg-8 col-xl-6 text-center">
-            <h2 className="mt-0">Let's Get In Touch!</h2>
-            <hr className="divider" />
-            <p className="text-muted mb-5">Ready to start your next project with us? Send us a message and we will get back to you as soon as possible!</p>
+    <div style={mastheadStyle}>
+      <div style={{ maxWidth: 520, width: '100%', margin: '0 auto', background: 'rgba(255,255,255,0.97)', borderRadius: 16, boxShadow: '0 8px 32px rgba(0,0,0,0.18)', padding: '2.5rem 2rem', textAlign: 'center' }}>
+        <h2 style={{ fontWeight: 'bold', color: '#2c3e50', marginBottom: 18, fontSize: '2rem' }}>Deja tus comentarios o inquietudes</h2>
+        <p style={{ color: '#555', marginBottom: 32 }}>
+          Te invitamos a dejar tus comentarios o inquietudes, los cuales serán de gran ayuda para resolver dudas y mejorar el proceso.
+        </p>
+        <form onSubmit={handleSubmit} style={{ textAlign: 'left' }}>
+          {feedback && (
+            <div className={`alert alert-${feedback.type === 'success' ? 'success' : 'danger'}`} role="alert">
+              {feedback.message}
+            </div>
+          )}
+          <div style={{ marginBottom: 12 }}>
+            <label>Full name</label>
+            <input type="text" id="name" value={formData.name} onChange={handleChange} required style={{ width: '100%', padding: 8, borderRadius: 6, border: '1px solid #ccc', marginTop: 4 }} />
           </div>
-        </div>
-        <div className="row gx-4 gx-lg-5 justify-content-center mb-5">
-          <div className="col-lg-6">
-            <form onSubmit={handleSubmit}>
-              <div className="form-floating mb-3">
-                <input 
-                  className="form-control" 
-                  id="name" 
-                  type="text" 
-                  placeholder="Enter your name..." 
-                  value={formData.name}
-                  onChange={handleChange}
-                  required 
-                />
-                <label htmlFor="name">Full name</label>
-              </div>
-              <div className="form-floating mb-3">
-                <input 
-                  className="form-control" 
-                  id="email" 
-                  type="email" 
-                  placeholder="name@example.com" 
-                  value={formData.email}
-                  onChange={handleChange}
-                  required 
-                />
-                <label htmlFor="email">Email address</label>
-              </div>
-              <div className="form-floating mb-3">
-                <input 
-                  className="form-control" 
-                  id="phone" 
-                  type="tel" 
-                  placeholder="(123) 456-7890" 
-                  value={formData.phone}
-                  onChange={handleChange}
-                  required 
-                />
-                <label htmlFor="phone">Phone number</label>
-              </div>
-              <div className="form-floating mb-3">
-                <textarea 
-                  className="form-control" 
-                  id="message" 
-                  placeholder="Enter your message here..." 
-                  style={{height: '10rem'}}
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                ></textarea>
-                <label htmlFor="message">Message</label>
-              </div>
-              <div className="d-grid">
-                <button className="btn btn-primary btn-xl" type="submit">Submit</button>
-              </div>
-            </form>
+          <div style={{ marginBottom: 12 }}>
+            <label>Email address</label>
+            <input type="email" id="email" value={formData.email} onChange={handleChange} required style={{ width: '100%', padding: 8, borderRadius: 6, border: '1px solid #ccc', marginTop: 4 }} />
           </div>
-        </div>
-        <div className="row gx-4 gx-lg-5 justify-content-center">
-          <div className="col-lg-4 text-center mb-5 mb-lg-0">
-            <i className="bi-phone fs-2 mb-3 text-muted"></i>
-            <div>+1 (555) 123-4567</div>
+          <div style={{ marginBottom: 12 }}>
+            <label>Phone number</label>
+            <input type="tel" id="phone" value={formData.phone} onChange={handleChange} required style={{ width: '100%', padding: 8, borderRadius: 6, border: '1px solid #ccc', marginTop: 4 }} />
           </div>
+          <div style={{ marginBottom: 18 }}>
+            <label>Message</label>
+            <textarea id="message" value={formData.message} onChange={handleChange} required style={{ width: '100%', padding: 8, borderRadius: 6, border: '1px solid #ccc', marginTop: 4, minHeight: 120 }} />
+          </div>
+          <button type="submit" style={{ width: '100%', background: '#2563eb', color: '#fff', padding: '0.9rem 0', borderRadius: 8, fontWeight: 600, fontSize: '1.1rem', border: 'none', cursor: 'pointer', marginBottom: 10 }} disabled={sending}>
+            {sending ? 'Enviando...' : 'Enviar'}
+          </button>
+        </form>
+        <div style={{ fontSize: '0.95rem', color: '#888', marginTop: 24 }}>
+          <i className="bi-phone fs-2 mb-3 text-muted"></i>
+          <div style={{ fontWeight: 500, marginTop: 4 }}>3186866521</div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 
